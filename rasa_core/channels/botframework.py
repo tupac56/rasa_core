@@ -147,14 +147,25 @@ class BotFrameworkInput(HttpInputComponent):
         @bf_webhook.route("/api/messages", methods=['POST'])
         def webhook():
             postdata = request.get_json(force=True)
-            # logger.info(postdata)
+            logger.info(postdata)
             try:
                 if postdata["type"] == "message":
                     out_channel = BotFramework(self.bf_id, self.bf_secret,
                                                postdata["conversation"],
                                                postdata["recipient"],
                                                postdata["serviceUrl"])
-                    user_msg = UserMessage(postdata["text"], out_channel,
+                    text = ""
+                    value = ""
+                    if postdata.get("value"):
+                        raw_value = postdata.get("value")
+                        # value = json.loads(raw_value)
+                        value = raw_value.get("value")
+                    else:
+                        if postdata.get("text"):
+                            text = postdata.get("text")
+                    
+                    user_msg = UserMessage("{}{}".format(text, value), 
+                                           out_channel,
                                            postdata["from"]["id"])
                     on_new_message(user_msg)
                 else:
