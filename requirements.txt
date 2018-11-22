@@ -37,4 +37,4 @@ sklearn-crfsuite
 scipy
 openpyxl
 Pillow
-pymssql==2.1.4
+pyodbc==4.0.24
