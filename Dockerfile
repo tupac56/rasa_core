@@ -5,6 +5,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update -qq && \
   apt-get install -y --no-install-recommends \
   build-essential \
+  apt-transport-https \
   wget \
   openssh-client \
   graphviz-dev \
@@ -16,18 +17,27 @@ RUN apt-get update -qq && \
   libffi-dev \
   libpng-dev \
   libc6-dev \
-  unixodbc \
-  unixodbc-dev \
   freetds-bin \
   freetds-common \
   freetds-dev \
   tdsodbc \
+  gnupg \
   curl && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
   mkdir /app
 
+# Add latest MS packages
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl https://packages.microsoft.com/config/debian/9/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
+# install SQL Server drivers
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
+
 WORKDIR /app
+
+# install SQL Server Python SQL Server connector module - pyodbc
+RUN pip install --upgrade pip
 
 # Copy as early as possible so we can cache ...
 ADD requirements.txt .
