@@ -158,14 +158,13 @@ class BotFrameworkInput(HttpInputComponent):
                     value = ""
                     if postdata.get("value"):
                         raw_value = postdata.get("value")
-                        # value = json.loads(raw_value)
                         # value = raw_value.get("value")
                         value = raw_value
                     else:
                         if postdata.get("text"):
                             text = postdata.get("text")
                     
-                    user_msg = UserMessage("{}{}".format(text, value), 
+                    user_msg = UserMessage("{}{}".format(text, json.dumps(value)), 
                                            out_channel,
                                            postdata["from"]["id"])
                     on_new_message(user_msg)
