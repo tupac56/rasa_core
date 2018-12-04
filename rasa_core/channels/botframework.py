@@ -159,7 +159,8 @@ class BotFrameworkInput(HttpInputComponent):
                     if postdata.get("value"):
                         raw_value = postdata.get("value")
                         # value = json.loads(raw_value)
-                        value = raw_value.get("value")
+                        # value = raw_value.get("value")
+                        value = raw_value
                     else:
                         if postdata.get("text"):
                             text = postdata.get("text")
